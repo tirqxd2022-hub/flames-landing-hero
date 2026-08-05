@@ -1,0 +1,56 @@
+# cPanel .htaccess — place at the document root of new.flamesgourmet.ca.
+# Frontend is served as static files. Passenger handles /api/* when the Node app
+# Application URL is set to: api
+
+RewriteEngine On
+Options -MultiViews
+DirectoryIndex index.html
+
+# 1) Pass /api/* to the Node backend via Passenger; do not proxy to a port.
+RewriteCond %{REQUEST_URI} ^/api/ [NC]
+RewriteRule ^ - [L]
+
+# 2) Serve uploaded media through the Node app. cPanel .htaccess cannot alias
+#    folders outside the document root reliably, so keep the public URLs clean
+#    (/uploads and /products) while Passenger serves files from ~/flames-api.
+RewriteCond %{REQUEST_URI} ^/uploads/
+RewriteRule ^uploads/(.*)$ /api/uploads/$1 [L]
+
+RewriteCond %{REQUEST_URI} ^/products/
+RewriteRule ^products/(.*)$ /api/products/$1 [L]
+
+# 3) SPA fallback — serve index.html for any non-file, non-directory request.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/api/ [NC]
+RewriteCond %{REQUEST_URI} !^/uploads/ [NC]
+RewriteCond %{REQUEST_URI} !^/products/ [NC]
+RewriteRule ^ index.html [L]
+
+# Security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Cache-Control "public, max-age=300, stale-while-revalidate=86400" "expr=%{CONTENT_TYPE} =~ m#^text/html#"
+</IfModule>
+
+# Block direct access to .env, SQL dumps, and database files.
+<FilesMatch "(^\.env|\.sql|\.sqlite|\.db)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/avif "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+</IfModule>

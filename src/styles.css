@@ -1,31 +1,9 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,114 +23,191 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-hero-background: var(--hero-background);
-  --color-hero-foreground: var(--hero-foreground);
-  --color-hero-accent: var(--hero-accent);
-  --color-hero-accent-foreground: var(--hero-accent-foreground);
-  --color-hero-muted: var(--hero-muted);
-  --color-hero-card: var(--hero-card);
-  --color-hero-border: var(--hero-border);
+  --color-gold: var(--gold);
+  --color-flame: var(--flame);
+  --color-flame-light: var(--flame-light);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-display: "Poppins", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-  --hero-background: oklch(0.17 0.03 40);
-  --hero-foreground: oklch(0.95 0.01 80);
-  --hero-accent: oklch(0.65 0.18 55);
-  --hero-accent-foreground: oklch(0.15 0.03 40);
-  --hero-muted: oklch(0.7 0.05 70);
-  --hero-card: oklch(0.22 0.04 45);
-  --hero-border: oklch(0.35 0.05 50);
-}
-
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --radius: 0.75rem;
+  /* Dark restaurant theme — near-black with warm red + gold accents */
+  --background: oklch(0.18 0.012 50);
+  --foreground: oklch(0.96 0.005 80);
+  --card: oklch(0.22 0.015 50);
+  --card-foreground: oklch(0.96 0.005 80);
+  --popover: oklch(0.22 0.015 50);
+  --popover-foreground: oklch(0.96 0.005 80);
+  --primary: oklch(0.65 0.22 28);                /* flame red */
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.28 0.02 50);
+  --secondary-foreground: oklch(0.96 0.005 80);
+  --muted: oklch(0.26 0.015 50);
+  --muted-foreground: oklch(0.7 0.02 80);
+  --accent: oklch(0.78 0.16 75);                 /* gold accent */
+  --accent-foreground: oklch(0.2 0.01 50);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.32 0.015 50);
+  --input: oklch(0.3 0.015 50);
+  --ring: oklch(0.65 0.22 28);
+  --gold: oklch(0.82 0.17 80);
+  --flame: oklch(0.65 0.22 28);
+  --flame-light: oklch(0.75 0.2 45);
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.01em; }
+
+  /* Make the native password reveal/clear icons (Edge/IE) visible on dark inputs */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    filter: invert(1) grayscale(1) brightness(1.8);
+  }
+
+  /* Make native picker indicators (time, date, datetime, week, month, search, color)
+     visible on dark inputs — same treatment as the password reveal icon. */
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="week"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button {
+    filter: invert(1) grayscale(1) brightness(1.8);
+    opacity: 0.9;
+    cursor: pointer;
   }
 }
+
+@utility text-flame-gradient {
+  background: linear-gradient(135deg, oklch(0.78 0.2 60), oklch(0.65 0.22 28));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Force own compositing layer to avoid Chrome Android raster glitches
+     where surrounding elements show rainbow pixel corruption. */
+  display: inline-block;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+@utility btn-flame {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, oklch(0.7 0.22 35), oklch(0.6 0.24 25));
+  box-shadow: 0 8px 24px -8px oklch(0.6 0.24 25 / 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: 0 12px 32px -10px oklch(0.6 0.24 25 / 0.8); }
+}
+
+@utility section-pad {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Themed scrollbar (transparent track, flame thumb/buttons) — applied to
+   .flame-scroll containers AND to the main page scrollbar site-wide. */
+.flame-scroll,
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--flame) transparent;
+}
+.flame-scroll::-webkit-scrollbar,
+html::-webkit-scrollbar { width: 10px; height: 10px; }
+.flame-scroll::-webkit-scrollbar-track,
+html::-webkit-scrollbar-track { background: transparent; }
+.flame-scroll::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb {
+  background-color: var(--flame);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.flame-scroll::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:hover { background-color: var(--flame-light); }
+.flame-scroll::-webkit-scrollbar-button,
+html::-webkit-scrollbar-button {
+  background-color: var(--flame);
+  height: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.flame-scroll::-webkit-scrollbar-button:vertical:decrement,
+html::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path d='M5 3l4 4H1z' fill='white'/></svg>");
+}
+.flame-scroll::-webkit-scrollbar-button:vertical:increment,
+html::-webkit-scrollbar-button:vertical:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path d='M5 7L1 3h8z' fill='white'/></svg>");
+}
+
+/* Themed time input (Pickup time) */
+.pickup-time-input { color-scheme: dark; }
+.pickup-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(64%) sepia(88%) saturate(2476%) hue-rotate(346deg) brightness(101%) contrast(101%);
+  cursor: pointer;
+  opacity: 0.9;
+}
+.pickup-time-input::-webkit-datetime-edit { color: inherit; }
+.pickup-time-input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+.pickup-time-input::-webkit-datetime-edit-hour-field:focus,
+.pickup-time-input::-webkit-datetime-edit-minute-field:focus,
+.pickup-time-input::-webkit-datetime-edit-ampm-field:focus {
+  background-color: hsl(var(--primary) / 0.25);
+  color: hsl(var(--primary-foreground, 0 0% 100%));
+  outline: none;
+  border-radius: 4px;
+}
+
+/* Deter casual media downloads */
+img, video, picture, source {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Themed number input spinners — paint flame-colored arrows on the input
+   background while leaving Chrome's native spin button active above it.
+   Keep the real control barely visible instead of opacity: 0; some deployed
+   Chromium builds stop forwarding clicks to a fully transparent spin button. */
+input[type="number"] {
+  padding-right: 1.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 18'%3E%3Cpath d='M5 2l4 5H1z' fill='%23e85d2f'/%3E%3Cpath d='M5 16l-4-5h8z' fill='%23e85d2f'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  background-size: 0.625rem 1.125rem;
+}
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: auto;
+  appearance: auto;
+  opacity: 0.01;
+  cursor: pointer;
+  margin: 0;
+}
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: auto;
+  appearance: auto;
+  opacity: 0.01;
+  margin: 0;
+}
+

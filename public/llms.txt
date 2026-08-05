@@ -1,0 +1,18 @@
+# Flames Gourmet
+
+> Specialty Indian restaurant in Canada. Authentic Indian spice, gourmet soul — premium Indian flavors crafted fresh for dine-in, take-away and à-la-carte ordering.
+
+Flames Gourmet is an Indian restaurant offering signature curries, biryanis, dosas, sandwiches, snacks, sweets and packaged foods. Orders are placed online and paid in cash at the counter.
+
+## Core pages
+
+- [Home](https://flamesgourmet.ca/): Overview of the restaurant, featured dishes and promotions.
+- [Menu](https://flamesgourmet.ca/menu): Full food menu organized by category.
+- [Shop](https://flamesgourmet.ca/shop): Online ordering for pickup.
+- [Promotions](https://flamesgourmet.ca/promotions): Current offers and coupons.
+- [About](https://flamesgourmet.ca/about): Our story, sourcing and kitchen.
+- [Contact](https://flamesgourmet.ca/contact): Address, hours and contact form.
+
+## Legal
+
+- [Legal & Policies](https://flamesgourmet.ca/legal): Privacy policy, terms and refund policy.
