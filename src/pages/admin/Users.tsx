@@ -291,17 +291,34 @@ function RoleManagementCard() {
               </button>
             </div>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {pages.map((p) => {
-              const perms = getPerms(activeRole);
-              return (
-                <label key={p.key} className="flex items-center gap-2 rounded-md border border-white/10 bg-background px-3 py-2 text-sm">
-                  <input type="checkbox" checked={perms.includes(p.key)} onChange={() => toggle(activeRole, p.key)} />
-                  <span>{p.label}</span>
-                </label>
-              );
-            })}
-          </div>
+          {(() => {
+            const perms = getPerms(activeRole);
+            const adminPages = pages.filter((p) => !USER_PAGE_KEYS.has(p.key));
+            const serverUserKeys = new Set(pages.filter((p) => USER_PAGE_KEYS.has(p.key)).map((p) => p.key));
+            const userPages = [
+              ...pages.filter((p) => USER_PAGE_KEYS.has(p.key)),
+              ...USER_PAGE_OPTIONS.filter((p) => !serverUserKeys.has(p.key)),
+            ];
+            const renderGroup = (title: string, items: PageOpt[]) => (
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[color:var(--gold)]">{title}</h3>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((p) => (
+                    <label key={p.key} className="flex items-center gap-2 rounded-md border border-white/10 bg-background px-3 py-2 text-sm">
+                      <input type="checkbox" checked={perms.includes(p.key)} onChange={() => toggle(activeRole, p.key)} />
+                      <span>{p.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            );
+            return (
+              <div className="space-y-5">
+                {renderGroup("Admin pages", adminPages)}
+                {renderGroup("User pages", userPages)}
+              </div>
+            );
+          })()}
         </div>
       )}
     </section>
