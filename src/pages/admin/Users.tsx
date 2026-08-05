@@ -185,6 +185,16 @@ export default function AdminUsers() {
 
 type RolePerms = { permissions: string[]; custom: boolean; defaults: string[] };
 type PageOpt = { key: string; label: string };
+// Pages available to signed-in users via the header user-icon dropdown
+const USER_PAGE_OPTIONS: PageOpt[] = [
+  { key: "user_dashboard", label: "Dashboard" },
+  { key: "user_profile", label: "Your profile" },
+  { key: "user_create_order", label: "Create orders" },
+  { key: "user_current_orders", label: "Current orders" },
+  { key: "user_orders", label: "View orders" },
+  { key: "user_promotions", label: "Promotions" },
+];
+const USER_PAGE_KEYS = new Set(USER_PAGE_OPTIONS.map((p) => p.key));
 const MANAGED_ROLES: { value: Exclude<AdminRole, "super">; label: string }[] = [
   { value: "admin", label: "Admin" },
   { value: "kitchen_manager", label: "Kitchen Manager" },
