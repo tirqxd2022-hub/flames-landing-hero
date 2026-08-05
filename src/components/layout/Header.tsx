@@ -37,7 +37,8 @@ export default function Header() {
   const [subsByCat, setSubsByCat] = useState<Record<string, { slug: string; name: string }[]>>({});
   const { items, count, subtotal, setQty, remove } = useCart();
   const { user, isStaff, canAdminPanel, logout } = useAuth();
-  const showDashboard = user?.role === "admin" || !!user?.is_super;
+  // Controlled from Admin → Users → Role management ("User pages" → Dashboard)
+  const showDashboard = !!user?.is_super || !!user?.permissions?.includes("user_dashboard");
   const showAdminPanel = canAdminPanel && user?.role !== "kitchen_manager";
   const navigate = useNavigate();
   const { pathname } = useLocation();
