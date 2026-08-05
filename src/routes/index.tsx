@@ -20,9 +20,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
-      { property: "og:image", content: heroImage },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: heroImage },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
@@ -83,6 +81,8 @@ function Index() {
             src={heroImage}
             alt="A perfectly grilled ribeye steak served on a dark slate plate in a warm, flame-lit restaurant"
             className="h-full w-full object-cover"
+            width={1280}
+            height={1024}
             loading="eager"
             decoding="async"
           />
