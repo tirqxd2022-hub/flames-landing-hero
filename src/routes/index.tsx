@@ -46,13 +46,12 @@ function Index() {
           </span>
 
           <h1 className="max-w-xl text-5xl font-semibold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
-            Where fire meets{" "}
-            <span className="text-hero-accent">flavor</span>.
+            Where fire meets <span className="text-hero-accent">flavor</span>.
           </h1>
 
           <p className="max-w-md text-lg leading-relaxed text-hero-muted">
-            Premium fire-grilled steaks, seasonal ingredients, and an atmosphere
-            that turns every meal into an occasion.
+            Premium fire-grilled steaks, seasonal ingredients, and an atmosphere that turns every
+            meal into an occasion.
           </p>
 
           <div className="mt-2 flex flex-wrap gap-4">
