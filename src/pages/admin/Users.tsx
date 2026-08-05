@@ -185,6 +185,16 @@ export default function AdminUsers() {
 
 type RolePerms = { permissions: string[]; custom: boolean; defaults: string[] };
 type PageOpt = { key: string; label: string };
+// Pages available to signed-in users via the header user-icon dropdown
+const USER_PAGE_OPTIONS: PageOpt[] = [
+  { key: "user_dashboard", label: "Dashboard" },
+  { key: "user_profile", label: "Your profile" },
+  { key: "user_create_order", label: "Create orders" },
+  { key: "user_current_orders", label: "Current orders" },
+  { key: "user_orders", label: "View orders" },
+  { key: "user_promotions", label: "Promotions" },
+];
+const USER_PAGE_KEYS = new Set(USER_PAGE_OPTIONS.map((p) => p.key));
 const MANAGED_ROLES: { value: Exclude<AdminRole, "super">; label: string }[] = [
   { value: "admin", label: "Admin" },
   { value: "kitchen_manager", label: "Kitchen Manager" },
@@ -281,17 +291,34 @@ function RoleManagementCard() {
               </button>
             </div>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {pages.map((p) => {
-              const perms = getPerms(activeRole);
-              return (
-                <label key={p.key} className="flex items-center gap-2 rounded-md border border-white/10 bg-background px-3 py-2 text-sm">
-                  <input type="checkbox" checked={perms.includes(p.key)} onChange={() => toggle(activeRole, p.key)} />
-                  <span>{p.label}</span>
-                </label>
-              );
-            })}
-          </div>
+          {(() => {
+            const perms = getPerms(activeRole);
+            const adminPages = pages.filter((p) => !USER_PAGE_KEYS.has(p.key));
+            const serverUserKeys = new Set(pages.filter((p) => USER_PAGE_KEYS.has(p.key)).map((p) => p.key));
+            const userPages = [
+              ...pages.filter((p) => USER_PAGE_KEYS.has(p.key)),
+              ...USER_PAGE_OPTIONS.filter((p) => !serverUserKeys.has(p.key)),
+            ];
+            const renderGroup = (title: string, items: PageOpt[]) => (
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[color:var(--gold)]">{title}</h3>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((p) => (
+                    <label key={p.key} className="flex items-center gap-2 rounded-md border border-white/10 bg-background px-3 py-2 text-sm">
+                      <input type="checkbox" checked={perms.includes(p.key)} onChange={() => toggle(activeRole, p.key)} />
+                      <span>{p.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            );
+            return (
+              <div className="space-y-5">
+                {renderGroup("Admin pages", adminPages)}
+                {renderGroup("User pages", userPages)}
+              </div>
+            );
+          })()}
         </div>
       )}
     </section>
