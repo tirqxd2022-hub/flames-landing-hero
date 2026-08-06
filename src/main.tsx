@@ -4,8 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./styles.css";
 import { installMediaDownloadGuard } from "./lib/media-guard";
+import { installAudioUnlock } from "./lib/notification-sounds";
 
 installMediaDownloadGuard();
+installAudioUnlock();
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
