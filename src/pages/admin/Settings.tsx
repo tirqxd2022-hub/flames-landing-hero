@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Play, Plus, Trash2 } from "lucide-react";
 import { adminApi, resolveAssetUrl, type SiteSettings, type AdminMe } from "@/lib/api";
 import OptimizedImage from "@/components/OptimizedImage";
 import { MediaPickerButton } from "@/components/admin/MediaPickerButton";
+import {
+  NOTIFICATION_RULES_KEY, TRIGGERS, parseRules, serializeRules,
+  type NotificationRule, type TriggerId,
+} from "@/lib/notification-rules";
+import { TONES, playTone, type ToneId } from "@/lib/notification-sounds";
 
 type Field = {
   k: string;
@@ -158,8 +163,16 @@ export default function AdminSettings() {
     finally { setBusy(false); }
   }
 
+  const NOTIFICATIONS_SECTION = {
+    id: "notifications",
+    title: "Notifications",
+    description: "Add a sound notification for an order event. Each event can have one sound; it plays once when the event happens.",
+    fields: [] as Field[],
+  };
+
   const tabs = [
     ...SECTIONS.filter((s) => s.id !== "delivery" || me?.is_super),
+    NOTIFICATIONS_SECTION,
     ...(me?.is_super ? [ATTENDANCE_SECTION, AI_SECTION] : []),
   ];
   const active = tabs.find((t) => t.id === activeTab) || tabs[0];
@@ -197,7 +210,9 @@ export default function AdminSettings() {
       {active && (
         <div className="mt-4 rounded-2xl border border-white/5 bg-[color:var(--card)] p-5">
           {active.description && <p className="mb-4 text-sm text-muted-foreground">{active.description}</p>}
-          <SectionGrid fields={active.fields} data={data} setData={setData} />
+          {active.id === "notifications"
+            ? <NotificationsSection data={data} setData={setData} />
+            : <SectionGrid fields={active.fields} data={data} setData={setData} />}
         </div>
       )}
 
