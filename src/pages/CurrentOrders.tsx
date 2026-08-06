@@ -7,6 +7,7 @@ import { fetchAdminOrders, updateAdminOrder, type AdminOrder } from "@/lib/api";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatCA } from "@/lib/datetime";
+import { detectOrderTriggers, snapshotOrders, useNotificationRules } from "@/lib/notification-rules";
 
 const PAY_LABEL: Record<string, string> = { cash: "Cash", debit: "Debit Card", credit: "Credit Card" };
 
@@ -41,11 +42,17 @@ export default function CurrentOrders() {
   const [viewing, setViewing] = useState<AdminOrder | null>(null);
   const timerRef = useRef<number | null>(null);
   const now = useNow(1000);
+  const notify = useNotificationRules();
+  const notifyRef = useRef(notify);
+  notifyRef.current = notify;
+  const prevSnap = useRef<Map<string, string> | null>(null);
 
   const load = async (silent = false) => {
     try {
       if (!silent) setRefreshing(true);
       const all = await fetchAdminOrders();
+      for (const t of detectOrderTriggers(prevSnap.current, all)) notifyRef.current.play(t);
+      prevSnap.current = snapshotOrders(all);
       const cutoff = Date.now() + 30 * 60 * 1000;
       setOrders(all.filter((o) => {
         if (!ACTIVE_STATUSES.has(o.status) || !o.paidAt) return false;
