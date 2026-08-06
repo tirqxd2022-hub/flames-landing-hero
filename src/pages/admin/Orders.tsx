@@ -1,5 +1,5 @@
 import { SearchClearButton } from "@/components/ui/search-clear";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchAdminOrders, updateAdminOrder, deleteAdminOrder,
   fetchSiteSettings, fetchAllProducts, adminApi,
@@ -22,6 +22,7 @@ import {
 import { printReceipt } from "@/lib/receipt";
 import OrderDetailsView from "@/components/OrderDetailsView";
 import EditOrderDialog from "@/components/EditOrderDialog";
+import { detectOrderTriggers, snapshotOrders, useNotificationRules } from "@/lib/notification-rules";
 
 const STATUSES = ["new", "preparing", "ready", "picked_up", "cancelled"] as const;
 const STATUS_COLORS: Record<string, string> = {
@@ -53,10 +54,16 @@ export default function AdminOrders() {
   const [me, setMe] = useState<AdminMe | null>(null);
   useEffect(() => { adminApi.me().then((r) => setMe(r.user)).catch(() => {}); }, []);
   const canView = !me || me.is_super || me.role !== "kitchen_manager";
+  const notify = useNotificationRules();
+  const notifyRef = useRef(notify);
+  notifyRef.current = notify;
+  const prevSnap = useRef<Map<string, string> | null>(null);
 
   const load = async () => {
     try {
       const data = await fetchAdminOrders();
+      for (const t of detectOrderTriggers(prevSnap.current, data)) notifyRef.current.play(t);
+      prevSnap.current = snapshotOrders(data);
       setOrders(data);
       setLastRefresh(new Date());
     } catch { /* ignore polling errors */ }
