@@ -223,6 +223,95 @@ export default function AdminSettings() {
 
 
 function SectionGrid({ fields, data, setData }: { fields: Field[]; data: SiteSettings; setData: (d: SiteSettings) => void }) {
+  return <SectionGridInner fields={fields} data={data} setData={setData} />;
+}
+
+function NotificationsSection({ data, setData }: { data: SiteSettings; setData: (d: SiteSettings) => void }) {
+  const rules = parseRules(data[NOTIFICATION_RULES_KEY]);
+  const used = new Set(rules.map((r) => r.trigger));
+  const freeTriggers = TRIGGERS.filter((t) => !used.has(t.id));
+
+  function commit(next: NotificationRule[]) {
+    setData({ ...data, [NOTIFICATION_RULES_KEY]: serializeRules(next) });
+  }
+  function add() {
+    const t = freeTriggers[0];
+    if (!t) return;
+    commit([...rules, { trigger: t.id, tone: TONES[0].id }]);
+  }
+
+  return (
+    <div className="space-y-3">
+      {rules.length === 0 && (
+        <p className="text-sm text-muted-foreground">No notifications yet. Add one to play a sound when an order event happens.</p>
+      )}
+      {rules.map((r, i) => (
+        <div key={r.trigger} className="grid gap-3 rounded-lg border border-white/10 bg-background/40 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">Trigger</span>
+            <select
+              value={r.trigger}
+              onChange={(e) => {
+                const next = rules.slice();
+                next[i] = { ...r, trigger: e.target.value as TriggerId };
+                commit(next);
+              }}
+              className="w-full rounded-md border border-white/10 bg-background px-3 py-2 text-sm"
+            >
+              {TRIGGERS.map((t) => (
+                <option key={t.id} value={t.id} disabled={t.id !== r.trigger && used.has(t.id)}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">Sound</span>
+            <div className="flex gap-2">
+              <select
+                value={r.tone}
+                onChange={(e) => {
+                  const next = rules.slice();
+                  next[i] = { ...r, tone: e.target.value as ToneId };
+                  commit(next);
+                  playTone(e.target.value, { force: true });
+                }}
+                className="w-full rounded-md border border-white/10 bg-background px-3 py-2 text-sm"
+              >
+                {TONES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+              </select>
+              <button
+                type="button" title="Preview sound" aria-label="Preview sound"
+                onClick={() => playTone(r.tone, { force: true })}
+                className="shrink-0 rounded-md border border-white/10 px-3 text-muted-foreground hover:text-white hover:border-[color:var(--flame)]/40"
+              >
+                <Play className="h-4 w-4" />
+              </button>
+            </div>
+          </label>
+          <button
+            type="button" title="Remove" aria-label="Remove notification"
+            onClick={() => commit(rules.filter((x) => x.trigger !== r.trigger))}
+            className="justify-self-start rounded-md border border-white/10 px-3 py-2 text-muted-foreground hover:border-red-500/40 hover:text-red-400"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+      <button
+        type="button" onClick={add} disabled={freeTriggers.length === 0}
+        className="inline-flex items-center gap-2 rounded-md border border-white/10 px-3 py-2 text-sm text-muted-foreground hover:text-white disabled:opacity-40"
+      >
+        <Plus className="h-4 w-4" /> Add notification
+      </button>
+      {freeTriggers.length === 0 && (
+        <p className="text-xs text-muted-foreground">Every trigger already has a notification.</p>
+      )}
+    </div>
+  );
+}
+
+function SectionGridInner({ fields, data, setData }: { fields: Field[]; data: SiteSettings; setData: (d: SiteSettings) => void }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {fields.map((f) => {
