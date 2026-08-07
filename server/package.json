@@ -1,0 +1,32 @@
+{
+  "name": "flames-gourmet-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "app.cjs",
+  "scripts": {
+    "start": "node app.cjs",
+    "dev": "node --watch src/index.js",
+    "seed": "node src/seed.js",
+    "init-db": "node src/seed.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "3.0.84",
+    "@ai-sdk/openai-compatible": "^2.0.51",
+    "ai": "^6.0.210",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0",
+    "sharp": "^0.33.5",
+    "zod": "^3.24.2"
+  }
+}
