@@ -11,7 +11,7 @@ import { z } from "zod";
 import { pool } from "../db.js";
 import { requireAdmin } from "../auth.js";
 import {
-  ROLES, PAGE_KEYS, PAGE_LABELS,
+  ROLES, ALL_PAGES, ALL_PAGE_KEYS, ALL_PAGE_LABELS,
   parsePermissions, defaultPermissionsForRole,
   getRolePermissions, setRolePermissions,
   effectivePermissionsAsync,
@@ -38,7 +38,7 @@ usersRouter.use(requireAdmin, requireUsersPerm);
 function sanitizePermissions(input) {
   if (input == null) return null;
   if (!Array.isArray(input)) return null;
-  const set = new Set(input.filter((k) => PAGE_KEYS.includes(k)));
+  const set = new Set(input.filter((k) => ALL_PAGE_KEYS.includes(k)));
   return Array.from(set);
 }
 
@@ -152,7 +152,7 @@ rolePermissionsRouter.get("/role-permissions", async (_req, res, next) => {
         defaults: defaultPermissionsForRole(role),
       };
     }
-    const pages = PAGE_KEYS.map((key) => ({ key, label: PAGE_LABELS[key] || key }));
+    const pages = ALL_PAGES.map((p) => ({ key: p.key, label: ALL_PAGE_LABELS[p.key] || p.key }));
     res.json({ items, pages });
   } catch (e) { next(e); }
 });
@@ -167,7 +167,7 @@ rolePermissionsRouter.put("/role-permissions", async (req, res, next) => {
     if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0]?.message || "Invalid input" });
     const perms = parsed.data.permissions === null
       ? null
-      : Array.from(new Set(parsed.data.permissions.filter((k) => PAGE_KEYS.includes(k))));
+      : Array.from(new Set(parsed.data.permissions.filter((k) => ALL_PAGE_KEYS.includes(k))));
     await setRolePermissions(pool, parsed.data.role, perms);
     res.json({ ok: true });
   } catch (e) { next(e); }

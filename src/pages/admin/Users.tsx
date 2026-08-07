@@ -189,6 +189,7 @@ type PageOpt = { key: string; label: string };
 const USER_PAGE_OPTIONS: PageOpt[] = [
   { key: "user_dashboard", label: "Dashboard" },
   { key: "user_profile", label: "Your profile" },
+  { key: "user_admin_panel", label: "Admin panel" },
   { key: "user_create_order", label: "Create orders" },
   { key: "user_current_orders", label: "Current orders" },
   { key: "user_orders", label: "View orders" },
