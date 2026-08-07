@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+
+# Runtime-only uploads (user-uploaded files via admin panel).
+# Seed/deploy images live in uploads/ and products/ and ARE tracked
+# so they can be deployed to cPanel alongside the API.
+uploads/_runtime/
+package-lock.json
