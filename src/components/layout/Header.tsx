@@ -36,10 +36,21 @@ export default function Header() {
   const [expandedMobile, setExpandedMobile] = useState<Record<string, boolean>>({});
   const [subsByCat, setSubsByCat] = useState<Record<string, { slug: string; name: string }[]>>({});
   const { items, count, subtotal, setQty, remove } = useCart();
-  const { user, isStaff, canAdminPanel, logout } = useAuth();
-  // Controlled from Admin → Users → Role management ("User pages" → Dashboard)
-  const showDashboard = !!user?.is_super || !!user?.permissions?.includes("user_dashboard");
-  const showAdminPanel = canAdminPanel && user?.role !== "kitchen_manager";
+  const { user, isStaff, logout } = useAuth();
+  // Controlled from Admin → Users → Role management ("User pages" section)
+  const can = (key: string) => {
+    if (!user) return false;
+    if (user.is_super) return true;
+    if (!isStaff) return true; // customers see the standard customer menu
+    return !!user.permissions?.includes(key);
+  };
+  const showDashboard = can("user_dashboard");
+  const showProfile = can("user_profile");
+  const showAdminPanel = isStaff && can("user_admin_panel");
+  const showCreateOrder = isStaff && can("user_create_order");
+  const showCurrentOrders = isStaff && can("user_current_orders");
+  const showViewOrders = can("user_orders");
+  const showPromotions = can("user_promotions");
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const settings = useSiteSettings() as Record<string, string>;
@@ -200,12 +211,12 @@ export default function Header() {
                   </div>
                   <div className="py-1">
                     {showDashboard && <MenuLink to="/dashboard" icon={LayoutDashboard} label="Dashboard" />}
-                    <MenuLink to="/profile" icon={UserCog} label="Your profile" />
+                    {showProfile && <MenuLink to="/profile" icon={UserCog} label="Your profile" />}
                     {showAdminPanel && <MenuLink to="/admin" icon={ShieldCheck} label="Admin panel" />}
-                    {isStaff && <MenuLink to="/create-order" icon={PlusCircle} label="Create orders" />}
-                    {isStaff && <MenuLink to="/current-orders" icon={ChefHat} label="Current orders" />}
-                    <MenuLink to="/orders" icon={ClipboardList} label="View orders" />
-                    <MenuLink to="/promotions" icon={Megaphone} label="Promotions" />
+                    {showCreateOrder && <MenuLink to="/create-order" icon={PlusCircle} label="Create orders" />}
+                    {showCurrentOrders && <MenuLink to="/current-orders" icon={ChefHat} label="Current orders" />}
+                    {showViewOrders && <MenuLink to="/orders" icon={ClipboardList} label="View orders" />}
+                    {showPromotions && <MenuLink to="/promotions" icon={Megaphone} label="Promotions" />}
                     <button onClick={() => handleLogoutClick()} className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5">
                       <LogOut className="h-4 w-4" /> Log out
                     </button>
