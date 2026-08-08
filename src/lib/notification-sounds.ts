@@ -8,7 +8,13 @@ export type ToneId =
   | "ding"
   | "alert"
   | "soft_pop"
-  | "rising_trill";
+  | "rising_trill"
+  | "siren"
+  | "klaxon"
+  | "buzzer"
+  | "loud_bell"
+  | "air_horn"
+  | "urgent_alarm";
 
 export const TONES: Array<{ id: ToneId; label: string; notes: Note[] }> = [
   {
@@ -54,6 +60,64 @@ export const TONES: Array<{ id: ToneId; label: string; notes: Note[] }> = [
       { freq: 784, start: 0.09, dur: 0.1 },
       { freq: 988, start: 0.18, dur: 0.1 },
       { freq: 1318, start: 0.27, dur: 0.3 },
+    ],
+  },
+  {
+    id: "siren",
+    label: "Siren (loud)",
+    notes: [
+      { freq: 700, start: 0, dur: 0.3, type: "sawtooth", gain: 0.5 },
+      { freq: 1100, start: 0.3, dur: 0.3, type: "sawtooth", gain: 0.5 },
+      { freq: 700, start: 0.6, dur: 0.3, type: "sawtooth", gain: 0.5 },
+      { freq: 1100, start: 0.9, dur: 0.35, type: "sawtooth", gain: 0.5 },
+    ],
+  },
+  {
+    id: "klaxon",
+    label: "Klaxon (loud)",
+    notes: [
+      { freq: 420, start: 0, dur: 0.28, type: "square", gain: 0.5 },
+      { freq: 560, start: 0.32, dur: 0.28, type: "square", gain: 0.5 },
+      { freq: 420, start: 0.64, dur: 0.35, type: "square", gain: 0.5 },
+    ],
+  },
+  {
+    id: "buzzer",
+    label: "Buzzer (loud)",
+    notes: [
+      { freq: 180, start: 0, dur: 0.5, type: "sawtooth", gain: 0.5 },
+      { freq: 240, start: 0, dur: 0.5, type: "square", gain: 0.35 },
+    ],
+  },
+  {
+    id: "loud_bell",
+    label: "Loud bell (repeating)",
+    notes: [
+      { freq: 1568, start: 0, dur: 0.4, gain: 0.5 },
+      { freq: 2093, start: 0.02, dur: 0.35, gain: 0.35 },
+      { freq: 1568, start: 0.45, dur: 0.4, gain: 0.5 },
+      { freq: 2093, start: 0.47, dur: 0.35, gain: 0.35 },
+      { freq: 1568, start: 0.9, dur: 0.5, gain: 0.5 },
+    ],
+  },
+  {
+    id: "air_horn",
+    label: "Air horn (very loud)",
+    notes: [
+      { freq: 330, start: 0, dur: 0.8, type: "sawtooth", gain: 0.5 },
+      { freq: 495, start: 0, dur: 0.8, type: "square", gain: 0.4 },
+      { freq: 660, start: 0.05, dur: 0.7, type: "sawtooth", gain: 0.3 },
+    ],
+  },
+  {
+    id: "urgent_alarm",
+    label: "Urgent alarm (loud)",
+    notes: [
+      { freq: 1000, start: 0, dur: 0.15, type: "square", gain: 0.5 },
+      { freq: 1400, start: 0.18, dur: 0.15, type: "square", gain: 0.5 },
+      { freq: 1000, start: 0.36, dur: 0.15, type: "square", gain: 0.5 },
+      { freq: 1400, start: 0.54, dur: 0.15, type: "square", gain: 0.5 },
+      { freq: 1800, start: 0.72, dur: 0.3, type: "square", gain: 0.5 },
     ],
   },
 ];

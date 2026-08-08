@@ -5,14 +5,16 @@ import { playTone, TONE_IDS, type ToneId } from "@/lib/notification-sounds";
 export const NOTIFICATION_RULES_KEY = "notification_rules";
 
 export type TriggerId =
-  | "order_new"
+  | "order_new_online"
+  | "order_new_counter"
   | "order_preparing"
   | "order_ready"
   | "order_completed"
   | "order_cancelled";
 
 export const TRIGGERS: Array<{ id: TriggerId; label: string; help?: string }> = [
-  { id: "order_new", label: "New order received", help: "Fires when a new order appears in the queue." },
+  { id: "order_new_online", label: "New online order received", help: "Fires when a customer order arrives from the website." },
+  { id: "order_new_counter", label: "New counter order received", help: "Fires when staff create an order at the counter." },
   { id: "order_preparing", label: "Order marked preparing" },
   { id: "order_ready", label: "Order marked ready" },
   { id: "order_completed", label: "Order completed", help: "Order picked up." },
@@ -25,12 +27,14 @@ export function triggerLabel(id: string): string {
 
 /** Order status → trigger for a status transition. */
 export const STATUS_TRIGGER: Record<string, TriggerId> = {
-  new: "order_new",
   preparing: "order_preparing",
   ready: "order_ready",
   picked_up: "order_completed",
   cancelled: "order_cancelled",
 };
+
+/** Legacy rule ids stored before online/counter split. */
+const LEGACY_TRIGGERS: Record<string, TriggerId> = { order_new: "order_new_online" };
 
 export type NotificationRule = { trigger: TriggerId; tone: ToneId };
 
@@ -42,7 +46,7 @@ export function parseRules(raw: string | undefined | null): NotificationRule[] {
     const seen = new Set<string>();
     const out: NotificationRule[] = [];
     for (const r of arr) {
-      const trigger = r?.trigger as TriggerId;
+      const trigger = (LEGACY_TRIGGERS[r?.trigger] ?? r?.trigger) as TriggerId;
       const tone = r?.tone as ToneId;
       if (!TRIGGERS.some((t) => t.id === trigger)) continue;
       if (!TONE_IDS.includes(tone)) continue;
@@ -77,7 +81,7 @@ export function useNotificationRules() {
   );
 }
 
-export type OrderSnapshot = { orderNumber: string; status: string };
+export type OrderSnapshot = { orderNumber: string; status: string; staffUsername?: string | null };
 
 /**
  * Diff two order lists and return the triggers that should fire.
@@ -92,7 +96,7 @@ export function detectOrderTriggers(
   for (const o of next) {
     const before = prev.get(o.orderNumber);
     if (before === undefined) {
-      fired.add("order_new");
+      fired.add(o.staffUsername ? "order_new_counter" : "order_new_online");
     } else if (before !== o.status) {
       const t = STATUS_TRIGGER[o.status];
       if (t) fired.add(t);
