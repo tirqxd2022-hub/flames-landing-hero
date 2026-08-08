@@ -4,9 +4,11 @@ import { toast } from "sonner";
 import { User as UserIcon, Upload } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { ROLE_LABEL, adminApi } from "@/lib/api";
+import { useViewAs, SUPER } from "@/lib/view-as";
 
 export default function Profile() {
   const { user, kind, loading, updateProfile } = useAuth();
+  const viewAs = useViewAs(!!user?.is_super);
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
@@ -76,6 +78,30 @@ export default function Profile() {
         </p>
 
         <form onSubmit={onSave} className="mt-8 rounded-2xl bg-[color:var(--card)] border border-white/5 p-6 space-y-6">
+          {user.is_super && (
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <label className="text-xs uppercase tracking-wider text-muted-foreground" htmlFor="view-as">View as</label>
+              <select
+                id="view-as"
+                value={viewAs.role}
+                onChange={(e) => viewAs.setRole(e.target.value)}
+                className="rounded-lg border border-white/10 bg-[color:var(--background)] px-3 py-2 text-sm"
+              >
+                {viewAs.roleOptions.map((r) => (
+                  <option key={r} value={r}>{ROLE_LABEL[r] || r}</option>
+                ))}
+              </select>
+              {viewAs.role !== SUPER && (
+                <button type="button" onClick={() => viewAs.setRole(SUPER)}
+                  className="text-xs text-muted-foreground hover:text-[color:var(--gold)]">Reset</button>
+              )}
+            </div>
+          )}
+          {viewAs.simulating && (
+            <p className="rounded-lg border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--gold)]">
+              Previewing the site as <strong>{ROLE_LABEL[viewAs.role] || viewAs.role}</strong>. Menus reflect that role's permissions.
+            </p>
+          )}
           <div className="flex items-center gap-5">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-[color:var(--flame)] grid place-items-center text-white">
               {form.avatar_url

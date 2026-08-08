@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Category } from "@/lib/mock-data";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useViewAs } from "@/lib/view-as";
 import { splitProductName } from "@/lib/utils";
 
 const LOGO_FALLBACK = "/uploads/flames-logo.png";
@@ -37,18 +38,22 @@ export default function Header() {
   const [subsByCat, setSubsByCat] = useState<Record<string, { slug: string; name: string }[]>>({});
   const { items, count, subtotal, setQty, remove } = useCart();
   const { user, isStaff, logout } = useAuth();
+  // Super admin can preview the site as another role ("View as" on /profile).
+  const viewAs = useViewAs(!!user?.is_super);
   // Controlled from Admin → Users → Role management ("User pages" section)
   const can = (key: string) => {
     if (!user) return false;
+    if (viewAs.permissions) return viewAs.permissions.includes(key);
     if (user.is_super) return true;
     if (!isStaff) return true; // customers see the standard customer menu
     return !!user.permissions?.includes(key);
   };
   const showDashboard = can("user_dashboard");
   const showProfile = can("user_profile");
-  const showAdminPanel = isStaff && can("user_admin_panel");
-  const showCreateOrder = isStaff && can("user_create_order");
-  const showCurrentOrders = isStaff && can("user_current_orders");
+  const staffView = isStaff;
+  const showAdminPanel = staffView && can("user_admin_panel");
+  const showCreateOrder = staffView && can("user_create_order");
+  const showCurrentOrders = staffView && can("user_current_orders");
   const showViewOrders = can("user_orders");
   const showPromotions = can("user_promotions");
   const navigate = useNavigate();
