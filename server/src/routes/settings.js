@@ -24,6 +24,8 @@ const KEYS = [
   "payments_merchant_id", "payments_account_id", "payments_notes",
   // AI Assistant (super-admin only via UI gate; stored here for runtime override of env)
   "ai_fallback_order",
+  // Notifications (sound rules JSON)
+  "notification_rules",
   "ai_gemini_key", "ai_gemini_model",
   "ai_openai_key", "ai_openai_model",
   "ai_groq_key", "ai_groq_model",
@@ -110,6 +112,7 @@ const PUBLIC_KEYS = [
   "site_title", "site_tagline", "logo_url", "favicon_url", "announcement_text", "announcement_speed",
   "contact_email", "contact_phone", "contact_whatsapp", "contact_address",
   "gst_rate_percent", "delivery_packaging_fee",
+  "notification_rules",
   "social_instagram", "social_facebook", "social_pinterest", "social_youtube",
 ];
 publicSettingsRouter.get("/site-settings", async (_req, res, next) => {
